@@ -5,11 +5,11 @@ var list = [];
 var sum = data.reduce((prev, curr) => prev + curr['population'], 0);
 var percent = 100 / sum;
 var other = 0;
-data.map((item) => {
+data.forEach((item) => {
     var elem = {
-        description: item['country'],
-        percentage: item['population'] * percent,
-        value: item['population']
+        description: item.country,
+        percentage: item.population * percent,
+        value: item.population
     };
     if (elem.percentage > OTHER_THRESHOLD) {
         list.push(elem);
