@@ -1,39 +1,30 @@
 var OTHER_THRESHOLD = 1;
 
-var list = [
-    {
-        "value": 120,
-        "percentage": 14.634146341463415,
-        "description": "Sector 1"
-    },
-    {
-        "value": 100,
-        "percentage": 12.195121951219512,
-        "description": "Sector 2"
-    },
-    {
-        "value": 70,
-        "percentage": 8.536585365853659,
-        "description": "Sector 3"
-    },
-    {
-        "value": 20,
-        "percentage": 2.4390243902439024,
-        "description": "Sector 4"
-    },
-    {
-        "value": 10,
-        "percentage": 1.2195121951219512,
-        "description": "Sector 5"
-    },
-    {
-        "value": 500,
-        "percentage": 60.97560975609756,
-        "description": "Other"
-    }
-];
+var list = [];
 
-/* Above you can see fake (hardcoded) array 'list'. Kill it and change with calculated one. */
+var sum = data.reduce((prev, curr) => prev + curr['population'], 0);
+var percent = 100 / sum;
+var other = 0;
+data.map((item) => {
+    var elem = {
+        description: item['country'],
+        percentage: item['population'] * percent,
+        value: item['population']
+    };
+    if (elem.percentage > OTHER_THRESHOLD) {
+        list.push(elem);
+    } else {other += elem.value}
+})
+
+list.push(
+    {
+        description: 'other',
+        percentage: other * percent,
+        value: other
+    }
+)
+
+list.sort((a,b) => b.percentage - a.percentage)
 
 // visualisation
 var canvas = document.getElementById('canvas');
