@@ -1,30 +1,35 @@
 var OTHER_THRESHOLD = 1;
 
-var list = [];
-
-var sum = data.reduce((prev, curr) => prev + curr['population'], 0);
+var sum = data.reduce((prev, curr) => prev + curr.population, 0);
 var percent = 100 / sum;
-var other = 0;
-data.forEach((item) => {
-    var elem = {
+
+var list = data.map(function(item){
+    return {
         description: item.country,
         percentage: item.population * percent,
         value: item.population
-    };
-    if (elem.percentage > OTHER_THRESHOLD) {
-        list.push(elem);
-    } else {other += elem.value}
-})
+     };
+});
 
 list.push(
     {
         description: 'other',
-        percentage: other * percent,
-        value: other
-    }
-)
+        percentage: 0,
+        value: 0
+    });
 
-list.sort((a,b) => b.percentage - a.percentage)
+list.map(function(item){
+    if(item.percentage < OTHER_THRESHOLD) {
+        list[list.length - 1].percentage += item.percentage;
+        list[list.length - 1].value += item.value;
+    }
+});
+
+list = list.filter(function (item) {
+    return item.percentage > OTHER_THRESHOLD;
+})
+
+ list.sort((a,b) => b.percentage - a.percentage)
 
 // visualisation
 var canvas = document.getElementById('canvas');
