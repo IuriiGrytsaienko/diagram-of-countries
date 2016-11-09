@@ -3,26 +3,24 @@ var OTHER_THRESHOLD = 1;
 var sum = data.reduce((prev, curr) => prev + curr.population, 0);
 var percent = 100 / sum;
 
-var list = data.map(function (item) {
-    return {
-        description: item.country,
-        percentage: item.population * percent,
-        value: item.population
-    };
-})
-    .push(
-        {
-            description: 'other',
-            percentage: 0,
-            value: 0
-        })
-    .map(function (item) {
-        if (item.percentage < OTHER_THRESHOLD) {
-            item[item.length - 1].percentage += item.percentage;
-            item[item.length - 1].value += item.value;
-        }
+var list = data.map(item => {
+        var percentage = item.population * percent;
+        return {
+            description: percentage < OTHER_THRESHOLD ? 'other' : item.country,
+            percentage: percentage,
+            value: item.population
+        };
     })
-    .filter(item => item.percentage > OTHER_THRESHOLD)
+    .reduce((arr, curr) => {
+        var other = arr.find(item => item.description == 'other');
+        if (curr.description != 'other' || !other) {
+            arr.push(curr)
+        } else {
+            other.percentage += curr.percentage;
+            other.value += curr.value;
+        }
+        return arr;
+    }, [])
     .sort((a, b) => b.percentage - a.percentage);
 
 // visualisation
